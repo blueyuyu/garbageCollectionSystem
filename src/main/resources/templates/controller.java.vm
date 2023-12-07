@@ -1,0 +1,94 @@
+package ${package.Controller};
+
+## 给模板文件导包
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.springframework.web.bind.annotation.RequestMapping;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.web.bind.annotation.*;
+import javax.annotation.Resource;
+import java.util.List;
+
+##继续导包，模板引擎语法 导报 user 与 其类型
+import $!{package.Service}.$!{table.serviceName};
+import ${package.Entity}.${entity};
+
+
+#if(${restControllerStyle})
+import org.springframework.web.bind.annotation.RestController;
+#else
+import org.springframework.stereotype.Controller;
+#end
+#if(${superControllerClassPackage})
+import ${superControllerClassPackage};
+#end
+
+/**
+ * <p>
+ * $!{table.comment} 前端控制器
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+#if(${restControllerStyle})
+@RestController
+#else
+@Controller
+#end
+@RequestMapping("#if(${package.ModuleName})/${package.ModuleName}#end/#if(${controllerMappingHyphenStyle})${controllerMappingHyphen}#else${table.entityPath}#end")
+#if(${kotlin})
+class ${table.controllerName}#if(${superControllerClass}) : ${superControllerClass}()#end
+
+#else
+#if(${superControllerClass})
+public class ${table.controllerName} extends ${superControllerClass} {
+#else
+public class ${table.controllerName} {
+#end
+
+##    代码生成器在此处加逻辑
+##    他的 table.serviceName 代表引入的对象的类    ${table.entityPath}代表user
+    @Resource
+    private ${table.serviceName} ${table.entityPath}Service;
+
+    @PostMapping
+    public Boolean save(@RequestBody ${entity} ${table.entityPath}) {
+##        新增或者更新
+        return ${table.entityPath}Service.saveOrUpdate(${table.entityPath});
+    }
+
+    @DeleteMapping("/{id}")
+    public Boolean delete(@PathVariable Integer id) {
+##        删除
+        return ${table.entityPath}Service.removeById(id);
+    }
+
+    // 使用post删除
+    @PostMapping("/del/batch")
+    public boolean deleteBatch(@RequestBody List<Integer> ids){
+        return ${table.entityPath}Service.removeByIds(ids);
+    }
+
+    @GetMapping
+    public List<${entity}> findAll() {
+##          查询所有的数据
+        return ${table.entityPath}Service.list();
+    }
+
+    @GetMapping("/{id}")
+    public ${entity} findOne(@PathVariable Integer id) {
+    ##        根据id 查询
+        return ${table.entityPath}Service.getById(id);
+    }
+
+    @GetMapping("/page")
+    public Page<${entity}> findPage(@RequestParam Integer pageNum,
+    @RequestParam Integer pageSize) {
+##        分页查询
+            QueryWrapper<${entity}> queryWrapper = new QueryWrapper<>();
+            queryWrapper.orderByDesc("id");
+            return ${table.entityPath}Service.page(new Page<>(pageNum, pageSize));
+        }
+}
+
+#end
