@@ -11,7 +11,11 @@
       <img src="../assets/logo.png" alt="" style="width: 20px; position: relative; top: 5px;">
       <b style="color: white; margin-left: 5px" v-show="logoTextShow">后台管理系统</b>
     </div>
-    <div v-for="item in menus" :key="item.id">
+    <el-menu-item index="/user">
+          <!-- <i :class="icon"></i> -->
+          <span slot="title">用户</span>
+    </el-menu-item>
+    <!-- <div v-for="item in menus" :key="item.id">
       <div v-if="item.path">
         <el-menu-item :index="item.path">
           <i :class="item.icon"></i>
@@ -32,7 +36,7 @@
           </div>
         </el-submenu>
       </div>
-    </div>
+    </div> -->
   </el-menu>
 </template>
 

@@ -67,6 +67,18 @@ const routes = [
       },
     ]
   },
+  {
+    path: '/user',
+    name: 'menu',
+    component: () => import('../views/Manage.vue'),
+    children: [
+      {
+        path: '',
+        name: 'user',
+        component: () => import('../views/User.vue')
+      }
+    ]
+  },
 ]
 
 const router = new VueRouter({

@@ -1,8 +1,15 @@
 package com.example.springpro.controller;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.springpro.common.Constants;
+import com.example.springpro.common.Result;
+import com.example.springpro.controller.dto.UserDTO;
+import com.example.springpro.service.impl.UserServiceImpl;
+import com.example.springpro.utils.TokenUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.List;
 
@@ -18,6 +27,7 @@ import com.example.springpro.entity.User;
 
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <p>
@@ -30,10 +40,33 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
     @Resource
     private IUserService userService;
 
+    // 用户登录方法
+    @PostMapping("/login")
+    public Result login(@RequestBody UserDTO userDTO){
+        String username = userDTO.getUsername();
+        String password = userDTO.getPassword();
+        if(StrUtil.isBlank(username) || StrUtil.isBlank(password) ){
+            return Result.error(Constants.CODE_400,"参数错误");
+        }
+        UserDTO user =  userService.login(userDTO);
+        return Result.success(user);
+    }
+
+    // 用户注册
+    @PostMapping("/register")
+    public Result register(@RequestBody UserDTO userDTO) {
+        String username = userDTO.getUsername();
+        String password = userDTO.getPassword();
+        if(StrUtil.isBlank(username) || StrUtil.isBlank(password) ){
+            return Result.error(Constants.CODE_400,"用户名或密码不能为空");
+        }
+        return Result.success(userService.register(userDTO));
+    }
+
+    // 用户更新
     @PostMapping
     public Boolean save(@RequestBody User user) {
         return userService.saveOrUpdate(user);
@@ -76,6 +109,8 @@ public class UserController {
         if (!"".equals(address)) {
             queryWrapper.like("address", address);
         }
+//        User u =  TokenUtils.getUserInfo();
+//        System.out.println(u.getNickname());
         return userService.page(new Page<>(pageNum, pageSize));
     }
 
@@ -89,14 +124,14 @@ public class UserController {
 //创建xlsx格式的
 //ExcelWriter writer = ExcelUtil.getWriter(true);
 
-        writer.addHeaderAlias("username", "用户名");
-        writer.addHeaderAlias("password", "密码");
-        writer.addHeaderAlias("nickname", "昵称");
-        writer.addHeaderAlias("email", "邮箱");
-        writer.addHeaderAlias("phone", "电话");
-        writer.addHeaderAlias("address", "地址");
-        writer.addHeaderAlias("createTime", "创建时间");
-        writer.addHeaderAlias("avatarUrl", "头像");
+//        writer.addHeaderAlias("username", "用户名");
+//        writer.addHeaderAlias("password", "密码");
+//        writer.addHeaderAlias("nickname", "昵称");
+//        writer.addHeaderAlias("email", "邮箱");
+//        writer.addHeaderAlias("phone", "电话");
+//        writer.addHeaderAlias("address", "地址");
+//        writer.addHeaderAlias("createTime", "创建时间");
+//        writer.addHeaderAlias("avatarUrl", "头像");
 // 一次性写出内容，使用默认样式，强制输出标题
         writer.write(list,true);
 
@@ -108,15 +143,25 @@ public class UserController {
 //out为OutputStream，需要写出到的目标流
         writer.flush(out,true);
 // 关闭writer，释放内存
-        writer.close();
+        out.close();
         writer.close();
     }
 
-    // 导入接口
-//    @PostMapping("import")
-//    public void import() thro{
-//
-//    }
+    /**
+     * @post
+     * params file
+     * 导入 excell 表格的形式
+     * **/
+    @PostMapping("/import")
+    public boolean impfile(MultipartFile file) throws Exception {
+        InputStream inputStream = file.getInputStream();
+        ExcelReader reader = ExcelUtil.getReader(inputStream);
+        List<User> all = reader.readAll(User.class);
+        // 批量插入数据库
+       userService.saveBatch(all);
+       return true;
+    }
+
 
 
 }
