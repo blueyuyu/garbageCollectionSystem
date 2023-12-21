@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
+import com.example.springpro.common.Result;
 
 ##继续导包，模板引擎语法 导报 user 与 其类型
 import $!{package.Service}.$!{table.serviceName};
@@ -52,42 +53,51 @@ public class ${table.controllerName} {
     private ${table.serviceName} ${table.entityPath}Service;
 
     @PostMapping
-    public Boolean save(@RequestBody ${entity} ${table.entityPath}) {
+    public Result save(@RequestBody ${entity} ${table.entityPath}) {
 ##        新增或者更新
-        return ${table.entityPath}Service.saveOrUpdate(${table.entityPath});
+         ${table.entityPath}Service.saveOrUpdate(${table.entityPath});
+         return Result.success();
     }
 
     @DeleteMapping("/{id}")
-    public Boolean delete(@PathVariable Integer id) {
+    public Result delete(@PathVariable Integer id) {
 ##        删除
-        return ${table.entityPath}Service.removeById(id);
+         ${table.entityPath}Service.removeById(id);
+        return Result.success();
     }
 
     // 使用post删除
     @PostMapping("/del/batch")
-    public boolean deleteBatch(@RequestBody List<Integer> ids){
-        return ${table.entityPath}Service.removeByIds(ids);
+    public Result deleteBatch(@RequestBody List<Integer> ids){
+         ${table.entityPath}Service.removeByIds(ids);
+         return Result.success();
     }
 
+    // List<${entity}>
     @GetMapping
-    public List<${entity}> findAll() {
+    public Result findAll() {
 ##          查询所有的数据
-        return ${table.entityPath}Service.list();
+        ${table.entityPath}Service.list();
+        return Result.success();
     }
 
+    //${entity}
     @GetMapping("/{id}")
-    public ${entity} findOne(@PathVariable Integer id) {
+    public Result findOne(@PathVariable Integer id) {
     ##        根据id 查询
-        return ${table.entityPath}Service.getById(id);
+        ${table.entityPath}Service.getById(id);
+        return Result.success();
     }
 
+    //Page<${entity}>
     @GetMapping("/page")
-    public Page<${entity}> findPage(@RequestParam Integer pageNum,
+    public Result findPage(@RequestParam Integer pageNum,
     @RequestParam Integer pageSize) {
 ##        分页查询
             QueryWrapper<${entity}> queryWrapper = new QueryWrapper<>();
             queryWrapper.orderByDesc("id");
-            return ${table.entityPath}Service.page(new Page<>(pageNum, pageSize));
+            ${table.entityPath}Service.page(new Page<>(pageNum, pageSize));
+            return Result.success();
         }
 }
 
