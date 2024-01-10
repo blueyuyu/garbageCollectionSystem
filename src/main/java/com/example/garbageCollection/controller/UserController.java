@@ -1,15 +1,13 @@
-package com.example.springpro.controller;
+package com.example.garbageCollection.controller;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.springpro.common.Constants;
-import com.example.springpro.common.Result;
-import com.example.springpro.controller.dto.UserDTO;
-import com.example.springpro.service.impl.UserServiceImpl;
-import com.example.springpro.utils.TokenUtils;
+import com.example.garbageCollection.common.Constants;
+import com.example.garbageCollection.common.Result;
+import com.example.garbageCollection.controller.dto.UserDTO;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.web.bind.annotation.*;
@@ -17,13 +15,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.List;
 
-import com.example.springpro.service.IUserService;
-import com.example.springpro.entity.User;
+import com.example.garbageCollection.service.IUserService;
+import com.example.garbageCollection.entity.User;
 
 
 import org.springframework.web.bind.annotation.RestController;

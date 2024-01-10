@@ -1,4 +1,4 @@
-package com.example.springpro.controller;
+package com.example.garbageCollection.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,10 +8,10 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.example.springpro.common.Result;
+import com.example.garbageCollection.common.Result;
 
-import com.example.springpro.service.IMenuService;
-import com.example.springpro.entity.Menu;
+import com.example.garbageCollection.service.IMenuService;
+import com.example.garbageCollection.entity.Menu;
 
 
 import org.springframework.web.bind.annotation.RestController;
@@ -58,15 +58,8 @@ public class MenuController {
 //        queryWrapper.like("name",name);
 //        queryWrapper.orderByDesc("id");
 
-        List<Menu> lists =  menuService.list();
-        // 找出pid为null的一级菜单
-       List<Menu>  parantNode = lists.stream().filter(menu -> menu.getPid() == null).collect(Collectors.toList());
-
-        // 找出一级菜单的子菜单
-        for (Menu i : parantNode){
-           i.setChildren(lists.stream().filter(menu -> menu.getPid()== i.getId()).collect(Collectors.toList()));
-        }
-        return Result.success(parantNode);
+        List<Menu> parentNode =  menuService.getAllMenu();
+        return Result.success(parentNode);
     }
 
     //Menu

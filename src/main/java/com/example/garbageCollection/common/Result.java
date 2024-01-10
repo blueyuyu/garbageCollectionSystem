@@ -1,4 +1,4 @@
-package com.example.springpro.common;
+package com.example.garbageCollection.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

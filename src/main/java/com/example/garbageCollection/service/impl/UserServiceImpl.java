@@ -1,18 +1,26 @@
-package com.example.springpro.service.impl;
+package com.example.garbageCollection.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.log.Log;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.springpro.common.Constants;
-import com.example.springpro.common.Result;
-import com.example.springpro.controller.dto.UserDTO;
-import com.example.springpro.entity.User;
-import com.example.springpro.exception.ServiceException;
-import com.example.springpro.mapper.UserMapper;
-import com.example.springpro.service.IUserService;
+import com.example.garbageCollection.common.Constants;
+import com.example.garbageCollection.common.RoleEnum;
+import com.example.garbageCollection.controller.dto.UserDTO;
+import com.example.garbageCollection.entity.Menu;
+import com.example.garbageCollection.entity.User;
+import com.example.garbageCollection.exception.ServiceException;
+import com.example.garbageCollection.mapper.RoleMapper;
+import com.example.garbageCollection.mapper.RoleMenuMapper;
+import com.example.garbageCollection.mapper.UserMapper;
+import com.example.garbageCollection.service.IMenuService;
+import com.example.garbageCollection.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.springpro.utils.TokenUtils;
+import com.example.garbageCollection.utils.TokenUtils;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -30,6 +38,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     // 定义一个变量接收，通过hutool里的方法，打印错误
     private static final Log LOG = Log.get();
+    @Resource
+    private RoleMapper roleMapper;
+
+    @Resource
+    private RoleMenuMapper roleMenuMapper;
+
+    @Resource
+    private IMenuService menuService;
 
     @Override
     public UserDTO login(UserDTO userDTO) {
@@ -45,6 +61,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             BeanUtil.copyProperties(one,userDTO,true);
             String token =  TokenUtils.createToken(one.getId().toString(),one.getPassword());
             userDTO.setToken(token);
+
+            try {
+                // 登陆时获取用户的角色菜单返回；
+                String userRole =  one.getRole(); // TOP_ADMIN]
+                // 查找role表的id
+                Integer roleId =  roleMapper.getIdByRole(userRole);
+                // 获取到menu_id 的数组 [1,2,3]
+                List<Integer> menuIdList =  roleMenuMapper.selectByRoleId(roleId);
+                // 在获取到到全部menu路由
+                List<Menu> menus =  menuService.getAllMenu();
+                // 根据menuList 去筛选最后获得menu router 返回给用户；
+                List<Menu> userMenu = new ArrayList<>();
+
+                for (Menu menu : menus){
+                    if(menuIdList.contains(menu.getId())){
+                        userMenu.add(menu);
+                    }
+                    // 子路由的处理
+                    menu.getChildren().removeIf(child -> !menuIdList.contains(child.getId()));
+                }
+                userDTO.setMenuList(userMenu);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             return userDTO;
         }else{
             // 为空，抛异常，输入错误,

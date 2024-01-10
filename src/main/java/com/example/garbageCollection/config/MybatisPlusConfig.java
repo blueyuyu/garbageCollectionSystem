@@ -1,4 +1,4 @@
-package com.example.springpro.config;
+package com.example.garbageCollection.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 // @Config 注入接口
 @Configuration
-@MapperScan("com.example.springpro.mapper")
+@MapperScan("com.example.garbageCollection.mapper")
 public class MybatisPlusConfig {
     /**
      * 添加分页插件

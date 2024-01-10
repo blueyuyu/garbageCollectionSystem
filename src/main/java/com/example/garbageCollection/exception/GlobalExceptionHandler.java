@@ -1,7 +1,7 @@
-package com.example.springpro.exception;
+package com.example.garbageCollection.exception;
 
 
-import com.example.springpro.common.Result;
+import com.example.garbageCollection.common.Result;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;

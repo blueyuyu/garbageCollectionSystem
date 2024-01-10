@@ -1,4 +1,4 @@
-package com.example.springpro.common;
+package com.example.garbageCollection.common;
 
 /**
  * 包装类

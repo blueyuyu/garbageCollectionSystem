@@ -1,4 +1,4 @@
-package com.example.springpro.config;
+package com.example.garbageCollection.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

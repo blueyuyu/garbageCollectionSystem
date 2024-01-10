@@ -1,11 +1,10 @@
-package com.example.springpro.config;
+package com.example.garbageCollection.config;
 
-import com.example.springpro.config.interceptor.JwtInterceptor;
+import com.example.garbageCollection.config.interceptor.JwtInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * 注册拦截器

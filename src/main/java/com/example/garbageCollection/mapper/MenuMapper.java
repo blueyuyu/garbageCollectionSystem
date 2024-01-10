@@ -1,6 +1,6 @@
-package com.example.springpro.mapper;
+package com.example.garbageCollection.mapper;
 
-import com.example.springpro.entity.Menu;
+import com.example.garbageCollection.entity.Menu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

@@ -1,7 +1,9 @@
-package com.example.springpro.mapper;
+package com.example.garbageCollection.mapper;
 
-import com.example.springpro.entity.Role;
+import com.example.garbageCollection.entity.Role;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * <p>
@@ -13,4 +15,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface RoleMapper extends BaseMapper<Role> {
 
+    @Select("select id from system_role where role_key=#{role_key}")
+    Integer getIdByRole(@Param("role_key") String role_key);
 }

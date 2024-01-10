@@ -1,13 +1,9 @@
 package ${package.Controller};
 
 ## 给模板文件导包
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.web.bind.annotation.RequestMapping;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
-import java.util.List;
-import com.example.springpro.common.Result;
 
 ##继续导包，模板引擎语法 导报 user 与 其类型
 import $!{package.Service}.$!{table.serviceName};

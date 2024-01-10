@@ -1,21 +1,14 @@
-package com.example.springpro.utils;
+package com.example.garbageCollection.utils;
 
-import cn.hutool.core.util.StrUtil;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.example.springpro.entity.User;
-import com.example.springpro.service.IUserService;
-import org.mybatis.logging.LoggerFactory;
+import com.example.garbageCollection.service.IUserService;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 public class TokenUtils {
 

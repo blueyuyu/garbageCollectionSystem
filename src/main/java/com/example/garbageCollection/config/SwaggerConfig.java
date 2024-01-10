@@ -1,4 +1,4 @@
-package com.example.springpro.config;
+package com.example.garbageCollection.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
@@ -40,7 +40,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .useDefaultResponseMessages(true)
                 .forCodeGeneration(false)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.example.springpro.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.example.garbageCollection.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }

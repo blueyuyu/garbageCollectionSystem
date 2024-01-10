@@ -1,7 +1,11 @@
-package com.example.springpro.service;
+package com.example.garbageCollection.service;
 
-import com.example.springpro.entity.Role;
+import com.example.garbageCollection.entity.Role;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.garbageCollection.entity.RoleMenu;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IRoleService extends IService<Role> {
 
+    void setRoleMenu(Integer id, ArrayList<Integer> menulist);
+
+    List<Integer> getRoleMenu(Integer roleId);
 }

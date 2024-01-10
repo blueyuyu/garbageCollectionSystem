@@ -1,7 +1,7 @@
-package com.example.springpro.service;
+package com.example.garbageCollection.service;
 
-import com.example.springpro.controller.dto.UserDTO;
-import com.example.springpro.entity.User;
+import com.example.garbageCollection.controller.dto.UserDTO;
+import com.example.garbageCollection.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

@@ -1,4 +1,4 @@
-package com.example.springpro.exception;
+package com.example.garbageCollection.exception;
 
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package com.example.springpro.entity;
+package com.example.garbageCollection.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;

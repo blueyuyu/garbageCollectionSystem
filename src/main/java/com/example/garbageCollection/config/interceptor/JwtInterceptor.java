@@ -1,18 +1,16 @@
-package com.example.springpro.config.interceptor;
+package com.example.garbageCollection.config.interceptor;
 
 import cn.hutool.core.util.StrUtil;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.example.springpro.common.Constants;
-import com.example.springpro.entity.User;
-import com.example.springpro.exception.ServiceException;
-import com.example.springpro.service.IUserService;
-import com.example.springpro.service.impl.UserServiceImpl;
+import com.example.garbageCollection.common.Constants;
+import com.example.garbageCollection.entity.User;
+import com.example.garbageCollection.exception.ServiceException;
+import com.example.garbageCollection.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 

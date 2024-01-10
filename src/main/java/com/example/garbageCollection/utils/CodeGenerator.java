@@ -1,4 +1,4 @@
-package com.example.springpro.utils;
+package com.example.garbageCollection.utils;
 
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
@@ -19,12 +19,12 @@ public class CodeGenerator {
                     builder.author("yuyu") // 设置作者
                             .enableSwagger() // 开启 swagger 模式
                             .fileOverride() // 覆盖已生成文件
-                            .outputDir("E:\\lajiPro\\springpro\\src\\main\\java"); // 指定输出目录
+                            .outputDir("E:\\lajiPro\\garbageCollection\\src\\main\\java"); // 指定输出目录
                 })
                 .packageConfig(builder -> {
-                    builder.parent("com.example.springpro") // 设置父包名
+                    builder.parent("com.example.garbageCollection") // 设置父包名
                             .moduleName(null) // 设置父包模块名
-                            .pathInfo(Collections.singletonMap(OutputFile.mapperXml, "E:\\lajiPro\\springpro\\src\\main\\resources\\mapper")); // 设置mapperXml生成路径
+                            .pathInfo(Collections.singletonMap(OutputFile.mapperXml, "E:\\lajiPro\\garbageCollection\\src\\main\\resources\\mapper")); // 设置mapperXml生成路径
                 })
                 .strategyConfig(builder -> {
                     builder.entityBuilder().enableLombok().enableRemoveIsPrefix();

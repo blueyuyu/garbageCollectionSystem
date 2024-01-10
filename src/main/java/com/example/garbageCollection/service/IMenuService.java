@@ -1,7 +1,9 @@
-package com.example.springpro.service;
+package com.example.garbageCollection.service;
 
-import com.example.springpro.entity.Menu;
+import com.example.garbageCollection.entity.Menu;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2023-12-19
  */
 public interface IMenuService extends IService<Menu> {
-
+    List<Menu> getAllMenu();
 }
