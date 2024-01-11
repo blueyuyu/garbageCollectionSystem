@@ -57,7 +57,6 @@ public class MenuController {
 //        QueryWrapper<Menu> queryWrapper = new QueryWrapper<>();
 //        queryWrapper.like("name",name);
 //        queryWrapper.orderByDesc("id");
-
         List<Menu> parentNode =  menuService.getAllMenu();
         return Result.success(parentNode);
     }

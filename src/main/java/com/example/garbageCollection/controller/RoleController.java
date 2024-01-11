@@ -77,7 +77,8 @@ public class RoleController {
             return Result.success();
     }
 
-    // 给角色分配路由表
+    // 给角色分配路由表，
+    // 当选择子路由的时候，也要选中他的父级路由
     @PostMapping("/roleMenu/{id}")
     public Result updateRoleMenu(@PathVariable Integer id, @RequestBody ArrayList<Integer> menulist) {
         try {
