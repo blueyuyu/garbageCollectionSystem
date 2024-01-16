@@ -44,7 +44,7 @@ public class Menu implements Serializable {
       @ApiModelProperty("菜单描述")
       private String description;
 
-      // 菜单子节点，在·表中并不存在
+      // 菜单子节点，在数据库表中并不存在
       @TableField(exist = false)
       private List<Menu> children;
 
