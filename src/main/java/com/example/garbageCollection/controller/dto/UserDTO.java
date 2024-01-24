@@ -14,6 +14,9 @@ public class UserDTO {
     private String password;
     private String nickname;
     private String avatarUrl;
+    private String email; // new
+    private String phone; // new
+    private String address; // new
     private String token; // 返回用户token
     private List<Menu> menuList; // 返回管理员用户的菜单
 }

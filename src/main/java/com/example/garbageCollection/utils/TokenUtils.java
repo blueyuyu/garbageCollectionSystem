@@ -38,7 +38,7 @@ public class TokenUtils {
      */
     public static String createToken(String userId, String sign) {
         //过期时间
-        Date expireDate = new Date(System.currentTimeMillis() + EXPIRATION * 1000);
+        Date expireDate = new Date(System.currentTimeMillis() + EXPIRATION * 1000 * 5);
         Map<String, Object> map = new HashMap<>();
         map.put("alg", "HS256");
         map.put("typ", "JWT");

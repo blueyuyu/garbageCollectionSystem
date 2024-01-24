@@ -20,6 +20,10 @@ public class Result {
         return new Result(Constants.CODE_200,"请求成功",data);
     }
 
+    public static Result success(Object data,String message){
+        return new Result(Constants.CODE_200,message,data);
+    }
+
     // 普通错误
     public static Result error(String code,String msg){
         return new Result(code,msg,"");

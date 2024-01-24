@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.garbageCollection.common.Constants;
 import com.example.garbageCollection.common.Result;
 import com.example.garbageCollection.controller.dto.UserDTO;
+import com.example.garbageCollection.mapper.UserMapper;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +40,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
     @Resource
     private IUserService userService;
+    @Resource
+    private UserMapper userMapper;
 
     // 用户登录方法
     @PostMapping("/login")
@@ -65,8 +68,19 @@ public class UserController {
 
     // 用户更新
     @PostMapping
-    public Boolean save(@RequestBody User user) {
-        return userService.saveOrUpdate(user);
+    public Result save(@RequestBody User user) {
+        // 根据用户名查找到id ,再将id 赋值上去，然后进行更新操作
+        // 这里应该使用包装类型 Integer 否则会抛出异常
+        Integer userId = userMapper.findUserIdByUsername(user.getUsername());
+        if(userId != null){
+            user.setId(userId);
+        }
+        boolean result = userService.saveOrUpdate(user);
+        if(result){
+            return Result.success(null,"更新用户信息成功");
+        }else{
+            return Result.error("1000","更新用户失败");
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -91,24 +105,24 @@ public class UserController {
     }
 
     @GetMapping("/page")
-    public Page<User> findPage(@RequestParam Integer pageNum,
-                               @RequestParam Integer pageSize, @RequestParam(defaultValue = "") String username,
-                               @RequestParam(defaultValue = "") String nickname,
+    public Result findPage(@RequestParam Integer pageNum,
+                               @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "") String username,
+                               @RequestParam(defaultValue = "") String email,
                                @RequestParam(defaultValue = "") String address) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("id");
+        queryWrapper.orderByAsc("id");
         if (!"".equals(username)) {
             queryWrapper.like("username", username);
         }
-        if (!"".equals(nickname)) {
-            queryWrapper.like("nickname", nickname);
+        if (!"".equals(email)) {
+            queryWrapper.like("email", email);
         }
         if (!"".equals(address)) {
             queryWrapper.like("address", address);
         }
 //        User u =  TokenUtils.getUserInfo();
 //        System.out.println(u.getNickname());
-        return userService.page(new Page<>(pageNum, pageSize));
+        return Result.success(userService.page(new Page<>(pageNum, pageSize),queryWrapper));
     }
 
     //    excell 导出接口
