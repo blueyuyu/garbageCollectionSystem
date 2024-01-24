@@ -69,11 +69,14 @@ public class UserController {
     // 用户更新
     @PostMapping
     public Result save(@RequestBody User user) {
-        // 根据用户名查找到id ,再将id 赋值上去，然后进行更新操作
-        // 这里应该使用包装类型 Integer 否则会抛出异常
-        Integer userId = userMapper.findUserIdByUsername(user.getUsername());
-        if(userId != null){
-            user.setId(userId);
+        // 这个应该是 userid 不存在的情况, 只能通过用户名更新
+        if(user.getId() == null){
+            // 根据用户名查找到id ,再将id 赋值上去，然后进行更新操作
+            // 这里应该使用包装类型 Integer 否则会抛出异常
+            Integer userId = userMapper.findUserIdByUsername(user.getUsername());
+            if(userId != null){
+                user.setId(userId);
+            }
         }
         boolean result = userService.saveOrUpdate(user);
         if(result){
@@ -90,8 +93,8 @@ public class UserController {
 
     // 使用post删除
     @PostMapping("/del/batch")
-    public boolean deleteBatch(@RequestBody List<Integer> ids) {
-        return userService.removeByIds(ids);
+    public Result deleteBatch(@RequestBody List<Integer> ids) {
+        return Result.success(userService.removeByIds(ids),"批量删除成功");
     }
 
     @GetMapping
@@ -134,15 +137,17 @@ public class UserController {
         ExcelWriter writer = ExcelUtil.getWriter(true);
 //创建xlsx格式的
 //ExcelWriter writer = ExcelUtil.getWriter(true);
+        writer.addHeaderAlias("id", "id");
+        writer.addHeaderAlias("username", "用户名");
+        writer.addHeaderAlias("password", "密码");
+        writer.addHeaderAlias("nickname", "昵称");
+        writer.addHeaderAlias("email", "邮箱");
+        writer.addHeaderAlias("phone", "电话");
+        writer.addHeaderAlias("address", "地址");
+        writer.addHeaderAlias("createTime", "创建时间");
+        writer.addHeaderAlias("avatarUrl", "头像");
+        writer.addHeaderAlias("role", "权限");
 
-//        writer.addHeaderAlias("username", "用户名");
-//        writer.addHeaderAlias("password", "密码");
-//        writer.addHeaderAlias("nickname", "昵称");
-//        writer.addHeaderAlias("email", "邮箱");
-//        writer.addHeaderAlias("phone", "电话");
-//        writer.addHeaderAlias("address", "地址");
-//        writer.addHeaderAlias("createTime", "创建时间");
-//        writer.addHeaderAlias("avatarUrl", "头像");
 // 一次性写出内容，使用默认样式，强制输出标题
         writer.write(list,true);
 
@@ -156,6 +161,7 @@ public class UserController {
 // 关闭writer，释放内存
         out.close();
         writer.close();
+        //
     }
 
     /**

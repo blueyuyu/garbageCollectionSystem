@@ -37,7 +37,7 @@ public class User implements Serializable {
       private String username;
 
       @ApiModelProperty("密码")
-      @JsonIgnore
+//      @JsonIgnore
       private String password;
 
       @ApiModelProperty("昵称")
