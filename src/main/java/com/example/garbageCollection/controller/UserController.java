@@ -137,16 +137,16 @@ public class UserController {
         ExcelWriter writer = ExcelUtil.getWriter(true);
 //创建xlsx格式的
 //ExcelWriter writer = ExcelUtil.getWriter(true);
-        writer.addHeaderAlias("id", "id");
-        writer.addHeaderAlias("username", "用户名");
-        writer.addHeaderAlias("password", "密码");
-        writer.addHeaderAlias("nickname", "昵称");
-        writer.addHeaderAlias("email", "邮箱");
-        writer.addHeaderAlias("phone", "电话");
-        writer.addHeaderAlias("address", "地址");
-        writer.addHeaderAlias("createTime", "创建时间");
-        writer.addHeaderAlias("avatarUrl", "头像");
-        writer.addHeaderAlias("role", "权限");
+//        writer.addHeaderAlias("id", "id");
+//        writer.addHeaderAlias("username", "用户名");
+//        writer.addHeaderAlias("password", "密码");
+//        writer.addHeaderAlias("nickname", "昵称");
+//        writer.addHeaderAlias("email", "邮箱");
+//        writer.addHeaderAlias("phone", "电话");
+//        writer.addHeaderAlias("address", "地址");
+//        writer.addHeaderAlias("createTime", "创建时间");
+//        writer.addHeaderAlias("avatarUrl", "头像");
+//        writer.addHeaderAlias("role", "权限");
 
 // 一次性写出内容，使用默认样式，强制输出标题
         writer.write(list,true);
@@ -170,13 +170,15 @@ public class UserController {
      * 导入 excell 表格的形式
      * **/
     @PostMapping("/import")
-    public boolean impfile(MultipartFile file) throws Exception {
+    public Result impfile(MultipartFile file) throws Exception {
         InputStream inputStream = file.getInputStream();
         ExcelReader reader = ExcelUtil.getReader(inputStream);
-        List<User> all = reader.readAll(User.class);
+        List<User> list = reader.readAll(User.class);
+        // 从第二个开始读取
+//        List<User> list = reader.read(0,1,User.class);
         // 批量插入数据库
-       userService.saveBatch(all);
-       return true;
+       userService.saveBatch(list);
+       return Result.success();
     }
 
 }

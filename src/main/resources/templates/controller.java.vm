@@ -9,6 +9,8 @@ import javax.annotation.Resource;
 import $!{package.Service}.$!{table.serviceName};
 import ${package.Entity}.${entity};
 
+import com.example.garbageCollection.common.Result;
+import java.net.URLEncoder;
 
 #if(${restControllerStyle})
 import org.springframework.web.bind.annotation.RestController;
@@ -52,7 +54,7 @@ public class ${table.controllerName} {
     public Result save(@RequestBody ${entity} ${table.entityPath}) {
 ##        新增或者更新
          ${table.entityPath}Service.saveOrUpdate(${table.entityPath});
-         return Result.success();
+         return Result.success(null);
     }
 
     @DeleteMapping("/{id}")
@@ -65,8 +67,7 @@ public class ${table.controllerName} {
     // 使用post删除
     @PostMapping("/del/batch")
     public Result deleteBatch(@RequestBody List<Integer> ids){
-         ${table.entityPath}Service.removeByIds(ids);
-         return Result.success();
+         return Result.success(${table.entityPath}Service.removeByIds(ids),"批量删除成功");
     }
 
     // List<${entity}>
@@ -95,6 +96,43 @@ public class ${table.controllerName} {
             ${table.entityPath}Service.page(new Page<>(pageNum, pageSize));
             return Result.success();
         }
-}
+
+
+    //    excell 导出接口
+    @GetMapping("/export")
+    public void export(HttpServletResponse response) throws Exception {
+            // 查出所有的数据
+            List<${entity}> list = ${table.entityPath}Service.list();
+            // 通过工具类创建writer，默认创建xls格式
+            ExcelWriter writer = ExcelUtil.getWriter(true);
+    //创建xlsx格式的
+    //ExcelWriter writer = ExcelUtil.getWriter(true);
+##            writer.addHeaderAlias("id", "id");
+##            writer.addHeaderAlias("username", "用户名");
+##            writer.addHeaderAlias("password", "密码");
+##            writer.addHeaderAlias("nickname", "昵称");
+##            writer.addHeaderAlias("email", "邮箱");
+##            writer.addHeaderAlias("phone", "电话");
+##            writer.addHeaderAlias("address", "地址");
+##            writer.addHeaderAlias("createTime", "创建时间");
+##            writer.addHeaderAlias("avatarUrl", "头像");
+##            writer.addHeaderAlias("role", "权限");
+
+    // 一次性写出内容，使用默认样式，强制输出标题
+            writer.write(list,true);
+
+    //        设置浏览器响应的格式
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+            String fileName = URLEncoder.encode("垃圾分类信息","UTF-8");
+            response.setHeader("Content-Disposition","attachment;filename="+fileName+".xlsx");
+            ServletOutputStream out=response.getOutputStream();
+    //out为OutputStream，需要写出到的目标流
+            writer.flush(out,true);
+    // 关闭writer，释放内存
+            out.close();
+            writer.close();
+            //
+            }
+    }
 
 #end
