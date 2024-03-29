@@ -158,8 +158,6 @@ public class GarbageController {
         InputStream inputStream = file.getInputStream();
         ExcelReader reader = ExcelUtil.getReader(inputStream);
         List<Garbage> list = reader.readAll(Garbage.class);
-        // 从第二个开始读取
-//        List<User> list = reader.read(0,1,User.class);
         // 批量插入数据库
         garbageService.saveBatch(list);
         return Result.success(null, "导入成功");

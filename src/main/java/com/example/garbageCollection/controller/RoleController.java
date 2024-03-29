@@ -101,7 +101,6 @@ public class RoleController {
         }catch (Exception e){
             throw e;
         }
-
     }
 
     // getRoleMenu
