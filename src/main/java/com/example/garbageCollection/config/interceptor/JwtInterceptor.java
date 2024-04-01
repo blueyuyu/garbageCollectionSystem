@@ -6,6 +6,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.garbageCollection.common.Constants;
+import com.example.garbageCollection.controller.IgnornToken;
 import com.example.garbageCollection.entity.User;
 import com.example.garbageCollection.exception.ServiceException;
 import com.example.garbageCollection.service.IUserService;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Objects;
 
 /**
  * jwt拦截器
@@ -30,36 +32,48 @@ public class JwtInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) {
-        // 从 http 请求头中取出 token
-        String token = httpServletRequest.getHeader("token");
-        // 如果不是映射到方法直接通过
-        if (!(object instanceof HandlerMethod)) {
+        // 配置忽略token请求的代码
+        HandlerMethod handlerMethod = (HandlerMethod) object;
+        // IgnornToken annotation = handlerMethod.getBeanType().getAnnotation(IgnornToken.class);
+        IgnornToken methodAnnotation = handlerMethod.getMethodAnnotation(IgnornToken.class);
+
+
+        // 若是没有配置注解
+        if (Objects.isNull(methodAnnotation)){
+            // 从 http 请求头中取出 token
+            String token = httpServletRequest.getHeader("token");
+            // 如果不是映射到方法直接通过
+            if (!(object instanceof HandlerMethod)) {
+                return true;
+            }
+            // 执行认证
+            if (StrUtil.isBlank(token)) {
+                throw new ServiceException(Constants.CODE_401,"无token，请重新登录");
+            }
+            // 获取 token 中的 userId
+            String userId;
+            try {
+                userId = JWT.decode(token).getAudience().get(0);
+            }catch (Exception e){
+                throw new ServiceException(Constants.CODE_401,"token认证失败");
+            }
+            User user = userService.getById(userId); // 验证有效
+            if(user == null){
+                throw new ServiceException(Constants.CODE_401,"用户不存在，请重新登录");
+                // 不理解
+            }
+            // 用户密码加签验证
+            JWTVerifier  jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
+            try{
+                jwtVerifier.verify(token);
+            }catch (JWTVerificationException e){
+                throw new ServiceException(Constants.CODE_401,"用户不存在，请重新登录");
+            }
+            // 验证 token
+            return true;
+        }else{
             return true;
         }
-        // 执行认证
-        if (StrUtil.isBlank(token)) {
-            throw new ServiceException(Constants.CODE_401,"无token，请重新登录");
-        }
-        // 获取 token 中的 userId
-        String userId;
-        try {
-            userId = JWT.decode(token).getAudience().get(0);
-        }catch (Exception e){
-            throw new ServiceException(Constants.CODE_401,"token认证失败");
-        }
-        User user = userService.getById(userId); // 验证有效
-        if(user == null){
-            throw new ServiceException(Constants.CODE_401,"用户不存在，请重新登录");
-            // 不理解
-        }
-        // 用户密码加签验证
-        JWTVerifier  jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
-        try{
-            jwtVerifier.verify(token);
-        }catch (JWTVerificationException e){
-            throw new ServiceException(Constants.CODE_401,"用户不存在，请重新登录");
-        }
-        // 验证 token
-        return true;
+
     }
 }

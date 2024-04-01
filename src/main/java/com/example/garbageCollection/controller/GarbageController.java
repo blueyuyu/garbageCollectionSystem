@@ -6,14 +6,12 @@ import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.garbageCollection.entity.User;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.annotation.XmlType;
 
 import com.example.garbageCollection.service.IGarbageService;
 import com.example.garbageCollection.entity.Garbage;
@@ -22,7 +20,6 @@ import com.example.garbageCollection.common.Result;
 
 import java.io.InputStream;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -76,7 +73,9 @@ public class GarbageController {
     }
 
     //Page<Garbage>
+    // 查找垃圾的接口
     @GetMapping("/page")
+    @IgnornToken
     public Result findPage(@RequestParam Integer pageNum,
                            @RequestParam Integer pageSize, @RequestParam(defaultValue = "") String name,
                            @RequestParam(defaultValue = "") String category) {
@@ -90,7 +89,6 @@ public class GarbageController {
         }
         return Result.success(garbageService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
-
 
     //    excell 导出接口
     @GetMapping("/export")
