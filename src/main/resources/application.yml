@@ -16,7 +16,9 @@ mvc:
     matching-strategy: ant_path_matcher
     mapper-locations: classpath:mapper/*.xml #扫描所有mybatis文件
 
-
+files:
+  upload:
+    path: E:\lajiPro\garbageCollectionSystem\files\
 
 
 
