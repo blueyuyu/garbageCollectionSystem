@@ -10,6 +10,7 @@ import java.util.List;
  * **/
 @Data
 public class UserDTO {
+    private Integer id; // id需要用到，在文章那里
     private String username;
     private String password;
     private String nickname;
