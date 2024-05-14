@@ -26,7 +26,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
                 // 拦截所有请求，通过判断token 是否合法决定是否需要登录
                 .addPathPatterns("/**")
                 // 排除的，不需要token也可登录的东西
-                .excludePathPatterns("/user/login","/user/register","/businessuser/login","/businessuser/register","/file/**");
+                .excludePathPatterns("/user/login","/user/register","/businessuser/login","/businessuser/register","/file/**","/article/page","/article/{id}");
     }
 
     /**
