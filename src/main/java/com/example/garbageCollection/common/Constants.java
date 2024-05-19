@@ -12,4 +12,5 @@ public interface Constants {
     String CODE_400 = "400"; // 业务错误
     String CODE_1001 = "1001"; // 登录业务异常
     String CODE_1002 = "1002"; // 注册业务异常
+    String CODE_1003 = "1003"; // 密码修改错误
 }
