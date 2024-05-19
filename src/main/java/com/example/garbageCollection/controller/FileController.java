@@ -4,30 +4,48 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.garbageCollection.common.Result;
-import com.example.garbageCollection.entity.Files;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.garbageCollection.mapper.FileMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
-import java.io.File;
+
+import com.example.garbageCollection.service.IFileService;
+import com.example.garbageCollection.entity.Files;
+
+import com.example.garbageCollection.common.Result;
+
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.File;
+
+
 /**
- * 文件上传的一个接口
+ * <p>
+ *  前端控制器
+ * </p>
+ *
+ * @author yuyu
+ * @since 2024-05-19
  */
 @RestController
 @RequestMapping("/file")
 public class FileController {
+
+    @Resource
+    private IFileService fileService;
 
     @Value("${files.upload.path}")
     private String fileUploadPath;
@@ -110,5 +128,70 @@ public class FileController {
         return Result.success("ok");
     }
 
+    @PostMapping
+    public Result save(@RequestBody Files file) {
+         return Result.success(fileService.saveOrUpdate(file));
+    }
 
-}
+    @DeleteMapping("/{id}")
+    public Result delete(@PathVariable Integer id) {
+        return Result.success(fileService.removeById(id));
+    }
+
+    // 使用post删除
+    @PostMapping("/del/batch")
+    public Result deleteBatch(@RequestBody List<Integer> ids){
+         return Result.success(fileService.removeByIds(ids),"批量删除成功");
+    }
+
+    // List<File>
+//    @GetMapping("/all")
+//    public Result findAll() {
+//        return Result.success(fileService.list());
+//    }
+
+    //File
+    @GetMapping("/get/{id}")
+    public Result findOne(@PathVariable Integer id) {
+        return Result.success( fileService.getById(id));
+    }
+
+    //Page<File>
+    @GetMapping("/page/page")
+    public Result findPage(@RequestParam Integer pageNum,
+    @RequestParam Integer pageSize,@RequestParam(defaultValue = "") String type) {
+            QueryWrapper<Files> queryWrapper = new QueryWrapper<>();
+            queryWrapper.orderByAsc("id");
+            if(!"".equals(type)){
+                queryWrapper.like("type",type);
+            }
+            return Result.success(fileService.page(new Page<>(pageNum, pageSize),queryWrapper));
+    }
+
+    //    excell 导出接口
+    @GetMapping("/export")
+    public void export(HttpServletResponse response) throws Exception {
+            // 查出所有的数据
+            List<Files> list = fileService.list();
+            // 通过工具类创建writer，默认创建xls格式
+            ExcelWriter writer = ExcelUtil.getWriter(true);
+    //创建xlsx格式的
+    //ExcelWriter writer = ExcelUtil.getWriter(true);
+
+    // 一次性写出内容，使用默认样式，强制输出标题
+            writer.write(list,true);
+
+    //        设置浏览器响应的格式
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+            String fileName = URLEncoder.encode("垃圾分类信息","UTF-8");
+            response.setHeader("Content-Disposition","attachment;filename="+fileName+".xlsx");
+            ServletOutputStream out=response.getOutputStream();
+    //out为OutputStream，需要写出到的目标流
+            writer.flush(out,true);
+    // 关闭writer，释放内存
+            out.close();
+            writer.close();
+            //
+            }
+    }
+

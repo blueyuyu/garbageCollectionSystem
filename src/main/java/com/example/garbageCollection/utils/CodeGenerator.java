@@ -30,7 +30,7 @@ public class CodeGenerator {
                     builder.entityBuilder().enableLombok().enableRemoveIsPrefix();
                     builder.controllerBuilder().enableHyphenStyle()  // 开启驼峰转连字符
                             .enableRestStyle();  // 开启生成@RestController 控制器, 必须加，不加返回不了json
-                    builder.addInclude("system_article") // 设置需要生成的表名
+                    builder.addInclude("system_category") // 设置需要生成的表名
                             .addTablePrefix("t_", "c_","system_"); // 设置过滤表前缀
                 })
                 .execute();
