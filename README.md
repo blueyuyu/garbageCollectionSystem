@@ -32,5 +32,3 @@
 
 https://github.com/blueyuyu/garbageCollectionSystem
 
-（因为是毕设的原因，该仓库暂时为private）
-
